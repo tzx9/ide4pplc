@@ -15,26 +15,41 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
-set(PROJECT_SOURCES
-    main.cpp
+add_subdirectory(lib)
 
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
+set(SOURCE_FILES
+    src/main.cpp
+    src/mainwindow.cpp
+)
+
+set(INCLUDE_FILES
+    include/mainwindow.h
+)
+
+set(FORM_FILES
+    forms/mainwindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ide4pplc
         MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
+        ${SOURCE_FILES}
+        ${INCLUDE_FILES}
+        ${FORM_FILES}
     )
 else()
     add_executable(ide4pplc
-        ${PROJECT_SOURCES}
+        ${SOURCE_FILES}
+        ${INCLUDE_FILES}
+        ${FORM_FILES}
     )
 endif()
 
-target_link_libraries(ide4pplc PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_include_directories(ide4pplc PUBLIC
+    include
+)
+
+target_link_libraries(ide4pplc PRIVATE Qt${QT_VERSION_MAJOR}::Widgets QCodeEditor)
 
 set_target_properties(ide4pplc PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
